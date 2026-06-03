@@ -1,0 +1,9 @@
+name: stock-dataprep-env
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip:
+      - numpy
+      - pandas
+      - scikit-learn

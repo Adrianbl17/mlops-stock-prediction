@@ -1,0 +1,12 @@
+name: stock-training-env
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip:
+      - numpy
+      - pandas
+      - scikit-learn
+      - tensorflow>=2.15.0
+      - mlflow
+      - azureml-mlflow
