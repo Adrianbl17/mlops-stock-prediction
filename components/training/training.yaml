@@ -1,0 +1,26 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
+name: stock_training_cli
+version: 0.1.0
+type: command
+display_name: Stock LSTM Training
+description: Trains a Dropout LSTM on preprocessed stock data and saves the model.
+is_deterministic: false
+
+code: ./code
+environment: azureml:aml-stock-training-cli:0.1.0
+command: 'python train.py
+  --input_data ${{inputs.input_data}}
+  --output_model ${{outputs.output_model}}
+  '
+
+inputs:
+  input_data:
+    optional: false
+    type: uri_folder
+
+outputs:
+  output_model:
+    type: uri_folder
+
+resources:
+  instance_count: 1

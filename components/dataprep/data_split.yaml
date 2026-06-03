@@ -1,0 +1,38 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
+name: stock_dataprep_cli
+version: 0.1.0
+type: command
+display_name: Stock Data Preprocessing
+description: Merges price and sentiment data, creates target, 60/20/20 chronological split, StandardScaler.
+is_deterministic: true
+
+code: ./code
+environment: azureml:aml-stock-dataprep-cli:0.1.0
+command: 'python dataprep.py
+  --price_data ${{inputs.price_data}}
+  --sentiment_data ${{inputs.sentiment_data}}
+  --mode ${{inputs.mode}}
+  --stock ${{inputs.stock}}
+  --output_data ${{outputs.output_data}}
+  '
+
+inputs:
+  price_data:
+    optional: false
+    type: uri_file
+  sentiment_data:
+    optional: false
+    type: uri_file
+  mode:
+    optional: false
+    type: string
+  stock:
+    optional: false
+    type: string
+
+outputs:
+  output_data:
+    type: uri_folder
+
+resources:
+  instance_count: 1
