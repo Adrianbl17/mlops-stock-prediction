@@ -1,0 +1,12 @@
+$schema: https://azuremlschemas.azureedge.net/latest/environment.schema.json
+description: Custom environment for stock data preprocessing
+name: aml-stock-dataprep-cli
+version: 0.1.0
+
+conda_file: ../components/dataprep/conda.yaml
+image: mcr.microsoft.com/azureml/openmpi5.0-ubuntu24.04:latest
+os_type: linux
+
+tags:
+  pandas: 2.2.3
+  scikit-learn: 1.6.1
