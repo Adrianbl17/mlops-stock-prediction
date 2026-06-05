@@ -1,6 +1,5 @@
 $schema: https://azuremlschemas.azureedge.net/latest/pipelineJob.schema.json
 type: pipeline
-name: stock-prediction-pipeline
 display_name: Stock Price Prediction Pipeline
 experiment_name: stock-lstm-experiment
 
