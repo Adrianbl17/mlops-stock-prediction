@@ -11,12 +11,8 @@ inputs:
   sentiment_data:
     type: uri_file
     path: azureml:sentiment-data:1
-  mode:
-    type: string
-    default: single
-  stock:
-    type: string
-    default: AAPL
+  mode: single
+  stock: AAPL
 
 outputs:
   model:
