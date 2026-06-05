@@ -1,4 +1,6 @@
-models/
+api/models/
+
+api/data/
 
 __pycache__/
 *.pyc
