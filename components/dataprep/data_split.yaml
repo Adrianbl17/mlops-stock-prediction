@@ -13,7 +13,7 @@ command: 'python dataprep.py
   --sentiment_data ${{inputs.sentiment_data}}
   --mode ${{inputs.mode}}
   --stock ${{inputs.stock}}
-  --max_stocks ${{inputs.max_stocks}}
+  $[[--max_stocks ${{inputs.max_stocks}}]]
   --output_data ${{outputs.output_data}}
   '
 
