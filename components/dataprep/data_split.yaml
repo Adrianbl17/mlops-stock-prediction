@@ -13,6 +13,7 @@ command: 'python dataprep.py
   --sentiment_data ${{inputs.sentiment_data}}
   --mode ${{inputs.mode}}
   --stock ${{inputs.stock}}
+  --max_stocks ${{inputs.max_stocks}}
   --output_data ${{outputs.output_data}}
   '
 
@@ -29,6 +30,10 @@ inputs:
   stock:
     optional: false
     type: string
+  max_stocks:
+    optional: true
+    type: integer
+    default: 100
 
 outputs:
   output_data:

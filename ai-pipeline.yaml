@@ -12,6 +12,7 @@ inputs:
     path: azureml:sentiment-data:1
   mode: single
   stock: AAPL
+  max_stocks: 100
 
 outputs:
   model:
@@ -31,6 +32,7 @@ jobs:
       sentiment_data: ${{parent.inputs.sentiment_data}}
       mode: ${{parent.inputs.mode}}
       stock: ${{parent.inputs.stock}}
+      max_stocks: ${{parent.inputs.max_stocks}}
     outputs:
       output_data:
         mode: rw_mount

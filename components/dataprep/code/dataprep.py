@@ -12,6 +12,8 @@ parser.add_argument('--mode',           type=str, default='single',
                     help='single = one stock | multi = all stocks')
 parser.add_argument('--stock',          type=str, default='AAPL',
                     help='Stock symbol to use in single mode, e.g. AAPL, GOOG, MSFT')
+parser.add_argument('--max_stocks',     type=int, default=100,
+                    help='Limit number of stocks in multi mode. Ignored in single mode.')
 parser.add_argument('--output_data',    type=str, required=True)
 args = parser.parse_args()
 
@@ -57,6 +59,11 @@ if args.mode == 'single':
     test  = df_stock.iloc[train_size + val_size:]
 
 else:
+    all_symbols = df['Symbol'].unique()
+    if args.max_stocks and args.max_stocks < len(all_symbols):
+        selected = all_symbols[:args.max_stocks]
+        df = df[df['Symbol'].isin(selected)]
+        print(f"Limited to {args.max_stocks} stocks out of {len(all_symbols)}")
     train_list, val_list, test_list = [], [], []
     for symbol, df_stock in df.groupby('Symbol'):
         df_stock = df_stock.sort_values('Date').reset_index(drop=True)
