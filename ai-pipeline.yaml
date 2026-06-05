@@ -1,0 +1,59 @@
+$schema: https://azuremlschemas.azureedge.net/latest/pipelineJob.schema.json
+type: pipeline
+name: stock-prediction-pipeline
+display_name: Stock Price Prediction Pipeline
+experiment_name: stock-lstm-experiment
+
+inputs:
+  price_data:
+    type: uri_file
+    path: azureml:price-data:1
+  sentiment_data:
+    type: uri_file
+    path: azureml:sentiment-data:1
+  mode:
+    type: string
+    default: single
+  stock:
+    type: string
+    default: AAPL
+
+outputs:
+  model:
+    mode: upload
+  registration_details:
+    mode: upload
+
+settings:
+  default_compute: azureml:compute-mlops-stock
+
+jobs:
+  dataprep:
+    type: command
+    component: ./components/dataprep/data_split.yaml
+    inputs:
+      price_data: ${{parent.inputs.price_data}}
+      sentiment_data: ${{parent.inputs.sentiment_data}}
+      mode: ${{parent.inputs.mode}}
+      stock: ${{parent.inputs.stock}}
+    outputs:
+      output_data:
+        mode: rw_mount
+
+  training:
+    type: command
+    component: ./components/training/training.yaml
+    inputs:
+      input_data: ${{parent.jobs.dataprep.outputs.output_data}}
+    outputs:
+      output_model: ${{parent.outputs.model}}
+
+  register:
+    type: command
+    component: azureml://registries/azureml/components/register_model/versions/0.0.21
+    inputs:
+      model_name: stock-prediction-model
+      model_type: custom_model
+      model_path: ${{parent.jobs.training.outputs.output_model}}
+    outputs:
+      registration_details_folder: ${{parent.outputs.registration_details}}
