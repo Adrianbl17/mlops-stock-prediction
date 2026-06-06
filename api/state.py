@@ -65,6 +65,14 @@ def get_trading_dates(symbol: str, start: date, end: date) -> list:
     ]["Date"].tolist()
 
 
+def get_daily_return(symbol: str, target_date: date) -> Optional[float]:
+    assert df is not None, "Data not loaded - call load_data() first"
+    row = df[(df["Symbol"] == symbol) & (df["Date"] == pd.Timestamp(target_date))]
+    if row.empty:
+        return None
+    return float(row.iloc[0]["daily_return"])
+
+
 def get_actual(symbol: str, target_date: date) -> Optional[str]:
     assert df is not None, "Data not loaded - call load_data() first"
     row = df[(df["Symbol"] == symbol) & (df["Date"] == pd.Timestamp(target_date))]

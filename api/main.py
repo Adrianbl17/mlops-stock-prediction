@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 import state
-from routers import health, stocks, data, predict
+from routers import health, stocks, data, predict, simulate
 
 
 @asynccontextmanager
@@ -26,3 +26,4 @@ app.include_router(health.router)
 app.include_router(stocks.router)
 app.include_router(data.router)
 app.include_router(predict.router)
+app.include_router(simulate.router)
