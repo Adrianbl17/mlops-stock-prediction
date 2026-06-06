@@ -81,6 +81,18 @@ def get_actual(symbol: str, target_date: date) -> Optional[str]:
     return "UP" if float(row.iloc[0]["daily_return"]) > 0 else "DOWN"
 
 
+def run_prediction(X_raw, model_type: str):
+    """Single prediction. X_raw shape: (window_size, n_features) - unscaled."""
+    feature_cols = metadatas[model_type]["feature_cols"]
+    window_size  = metadatas[model_type]["window_size"]
+    X_scaled     = scalers[model_type].transform(X_raw)
+    X_input      = X_scaled.reshape(1, window_size, len(feature_cols))
+    raw_prob     = float(models[model_type].predict(X_input, verbose=0).flatten()[0])
+    prediction   = "UP" if raw_prob > 0.5 else "DOWN"
+    confidence   = round(raw_prob if raw_prob > 0.5 else 1 - raw_prob, 4)
+    return prediction, confidence, raw_prob
+
+
 def batch_predict(X_batch, model_type: str):
     """Run all windows through the model in one call.
 
