@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Stock Prediction</title>
+</head>
+<body>
+
+<h1>Stock Prediction - LSTM S&P 500</h1>
+
+<!-- ── Section 1: Prediction ── -->
+<h2>Prediction</h2>
+
+<label>Model:
+  <select>
+    <option value="single">Single (AAPL)</option>
+    <option value="multi">Multi (pick stock)</option>
+  </select>
+</label>
+
+<label>Stock:
+  <select>
+    <option>AAPL</option>
+    <option>GOOG</option>
+    <option>MSFT</option>
+  </select>
+</label>
+
+<label>Start: <input type="date" value="2023-06-01" /></label>
+<label>End: <input type="date" value="2023-06-30" /></label>
+
+<button>Predict</button>
+
+<table border="1">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Predicted</th>
+      <th>Confidence</th>
+      <th>Actual</th>
+      <th>Correct</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>2023-06-01</td>
+      <td>UP</td>
+      <td>73%</td>
+      <td>UP</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>2023-06-02</td>
+      <td>UP</td>
+      <td>61%</td>
+      <td>DOWN</td>
+      <td>no</td>
+    </tr>
+    <tr>
+      <td>2023-06-05</td>
+      <td>DOWN</td>
+      <td>80%</td>
+      <td>DOWN</td>
+      <td>yes</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ── Section 2: Simulation ── -->
+<h2>Simulation - 2023-06-05 - AAPL - single</h2>
+
+<table border="1">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Day 1</th>
+      <th>Day 2</th>
+      <th>Day 3</th>
+      <th>Day 4</th>
+      <th>Day 5</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>daily_return</td>
+      <td><input type="range" min="-0.1" max="0.1" step="0.001" value="0.012" /> 0.012</td>
+      <td><input type="range" min="-0.1" max="0.1" step="0.001" value="0.005" /> 0.005</td>
+      <td><input type="range" min="-0.1" max="0.1" step="0.001" value="-0.008" /> -0.008</td>
+      <td><input type="range" min="-0.1" max="0.1" step="0.001" value="0.002" /> 0.002</td>
+      <td><input type="range" min="-0.1" max="0.1" step="0.001" value="0.015" /> 0.015</td>
+    </tr>
+    <tr>
+      <td>Volume</td>
+      <td><input type="range" min="0" max="50000000" step="100000" value="15000000" /> 15.0M</td>
+      <td><input type="range" min="0" max="50000000" step="100000" value="12000000" /> 12.0M</td>
+      <td><input type="range" min="0" max="50000000" step="100000" value="9800000" /> 9.8M</td>
+      <td><input type="range" min="0" max="50000000" step="100000" value="11000000" /> 11.0M</td>
+      <td><input type="range" min="0" max="50000000" step="100000" value="13000000" /> 13.0M</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Baseline</h3>
+<p>Prediction: UP</p>
+<p>Confidence: 65%</p>
+
+<h3>Simulated</h3>
+<p>Prediction: DOWN</p>
+<p>Confidence: 42%</p>
+
+<h3>Delta</h3>
+<p>-0.23 (raw probability shift)</p>
+
+<button>Reset to real values</button>
+
+<!-- ── Section 3: History ── -->
+<h2>Prediction History</h2>
+
+<table border="1">
+  <thead>
+    <tr>
+      <th>Symbol</th>
+      <th>Model</th>
+      <th>Date</th>
+      <th>Prediction</th>
+      <th>Confidence</th>
+      <th>Simulated?</th>
+      <th>Timestamp</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>AAPL</td>
+      <td>single</td>
+      <td>2023-06-05</td>
+      <td>DOWN</td>
+      <td>42%</td>
+      <td>yes</td>
+      <td>2023-06-10 14:32</td>
+    </tr>
+    <tr>
+      <td>AAPL</td>
+      <td>single</td>
+      <td>2023-06-01</td>
+      <td>UP</td>
+      <td>68%</td>
+      <td>no</td>
+      <td>2023-06-10 14:30</td>
+    </tr>
+    <tr>
+      <td>GOOG</td>
+      <td>multi</td>
+      <td>2023-07-01</td>
+      <td>UP</td>
+      <td>71%</td>
+      <td>no</td>
+      <td>2023-06-10 13:15</td>
+    </tr>
+  </tbody>
+</table>
+
+</body>
+</html>
