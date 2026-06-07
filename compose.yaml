@@ -25,6 +25,7 @@ services:
     env_file: .env
     volumes:
       - postgres:/var/lib/postgresql/data/
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U stock_user -d predictions"]
       interval: 10s
