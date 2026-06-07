@@ -1,3 +1,21 @@
+const MAX_DATE_RANGE_DAYS = 90;
+
+function handleStartDateChange(e) {
+  const startDate    = e.target.value;
+  const endDateInput = document.querySelector("#end-date");
+  if (!startDate) return;
+
+  const maxEndDate = new Date(startDate);
+  maxEndDate.setDate(maxEndDate.getDate() + MAX_DATE_RANGE_DAYS);
+
+  endDateInput.min = startDate;
+  endDateInput.max = maxEndDate.toISOString().slice(0, 10);
+
+  if (endDateInput.value && endDateInput.value > endDateInput.max) {
+    endDateInput.value = endDateInput.max;
+  }
+}
+
 const FEATURE_DISPLAY = {
   daily_return: (value) => value.toFixed(3),
   Volume:       (value) => `${(value / 1_000_000).toFixed(1)}M`,
@@ -169,4 +187,4 @@ function handleModelChange(e) {
   loadStocks(modelSelect.value, stockSelect);
 }
 
-export {handleModelChange, loadStocks, handlePredictionRowClick, handleSliderInput, handlePredictClick, loadSimulationWindow, handleSimulateClick, handleResetClick};
+export {handleModelChange, loadStocks, handlePredictionRowClick, handleSliderInput, handlePredictClick, loadSimulationWindow, handleSimulateClick, handleResetClick, handleStartDateChange};

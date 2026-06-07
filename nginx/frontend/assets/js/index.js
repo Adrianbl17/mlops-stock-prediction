@@ -12,6 +12,10 @@ function init() {
     row.addEventListener("click", Handler.handlePredictionRowClick);
   });
 
+  const startDateInput = document.querySelector("#start-date");
+  startDateInput.addEventListener("change", Handler.handleStartDateChange);
+  Handler.handleStartDateChange({ target: startDateInput });
+
   document.querySelector("#predict-button").addEventListener("click", Handler.handlePredictClick);
 
   document.querySelector("#simulate-button").addEventListener("click", Handler.handleSimulateClick);
