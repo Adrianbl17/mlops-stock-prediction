@@ -39,7 +39,69 @@ function setSliderRange(input, feature, value) {
   input.max = String(max);
 }
 
-let simState = null;
+async function saveToHistory({ symbol, modelType, date, prediction, confidence, isSimulation }) {
+  const response = await fetch("/api/history", {
+    method:  "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      symbol,
+      model_type:    modelType,
+      date,
+      prediction,
+      confidence,
+      is_simulation: isSimulation,
+    }),
+  });
+
+  if (!response.ok) throw new Error("Failed to save to history");
+}
+
+async function handleSaveToHistoryClick(button, entry) {
+  const originalText = button.textContent;
+  button.disabled    = true;
+
+  try {
+    await saveToHistory(entry);
+    button.textContent = "Saved";
+    loadHistory();
+  } catch {
+    button.textContent = "Save failed";
+    button.disabled    = false;
+    setTimeout(() => { button.textContent = originalText; }, 2000);
+  }
+}
+
+function buildHistoryRow(entry) {
+  const row = document.createElement("tr");
+
+  [
+    entry.symbol,
+    entry.model_type,
+    entry.date,
+    entry.prediction,
+    `${Math.round(entry.confidence * 100)}%`,
+    entry.is_simulation ? "yes" : "no",
+    entry.predicted_at,
+  ].forEach((text) => {
+    const cell = document.createElement("td");
+    cell.textContent = text;
+    row.appendChild(cell);
+  });
+
+  return row;
+}
+
+async function loadHistory() {
+  const response = await fetch("/api/history");
+  const entries  = await response.json();
+
+  const tbody = document.querySelector("#history-table tbody");
+  tbody.innerHTML = "";
+  entries.forEach((entry) => tbody.appendChild(buildHistoryRow(entry)));
+}
+
+let simState    = null;
+let lastSimResult = null;
 
 async function loadSimulationWindow(symbol, date, modelType) {
   const response = await fetch(`/api/data?symbol=${encodeURIComponent(symbol)}&date=${encodeURIComponent(date)}`);
@@ -57,9 +119,14 @@ async function loadSimulationWindow(symbol, date, modelType) {
     });
   });
 
-  simState = { symbol, date, modelType, featureCols: data.feature_cols, window: data.window };
+  simState      = { symbol, date, modelType, featureCols: data.feature_cols, window: data.window };
+  lastSimResult = null;
 
   document.querySelector("#simulation-heading").textContent = `Simulation - ${date} - ${symbol} - ${modelType}`;
+
+  const saveSimButton = document.querySelector("#save-simulation-button");
+  saveSimButton.textContent = "Save to History";
+  saveSimButton.disabled    = true;
 }
 
 function collectSimulationFeatures() {
@@ -91,12 +158,30 @@ async function handleSimulateClick() {
     }),
   });
   const result = await response.json();
+  lastSimResult = result;
 
   document.querySelector("#baseline-prediction").textContent  = result.baseline_prediction;
   document.querySelector("#baseline-confidence").textContent  = `${Math.round(result.baseline_confidence * 100)}%`;
   document.querySelector("#simulated-prediction").textContent = result.simulated_prediction;
   document.querySelector("#simulated-confidence").textContent = `${Math.round(result.simulated_confidence * 100)}%`;
   document.querySelector("#simulation-delta").textContent     = result.delta;
+
+  const saveSimButton = document.querySelector("#save-simulation-button");
+  saveSimButton.textContent = "Save to History";
+  saveSimButton.disabled    = false;
+}
+
+async function handleSaveSimulationClick(e) {
+  if (!simState || !lastSimResult) return;
+
+  await handleSaveToHistoryClick(e.currentTarget, {
+    symbol:       simState.symbol,
+    modelType:    simState.modelType,
+    date:         simState.date,
+    prediction:   lastSimResult.simulated_prediction,
+    confidence:   lastSimResult.simulated_confidence,
+    isSimulation: true,
+  });
 }
 
 function handleResetClick() {
@@ -139,6 +224,23 @@ function buildPredictionRow(result) {
     cell.textContent = text;
     row.appendChild(cell);
   });
+
+  const saveCell   = document.createElement("td");
+  const saveButton = document.createElement("button");
+  saveButton.textContent = "Save to History";
+  saveButton.addEventListener("click", (e) => {
+    e.stopPropagation();
+    handleSaveToHistoryClick(e.currentTarget, {
+      symbol:       document.querySelector("#stock-select").value,
+      modelType:    document.querySelector("#model-select").value,
+      date:         result.date,
+      prediction:   result.prediction,
+      confidence:   result.confidence,
+      isSimulation: false,
+    });
+  });
+  saveCell.appendChild(saveButton);
+  row.appendChild(saveCell);
 
   row.addEventListener("click", handlePredictionRowClick);
   return row;
@@ -187,4 +289,4 @@ function handleModelChange(e) {
   loadStocks(modelSelect.value, stockSelect);
 }
 
-export {handleModelChange, loadStocks, handlePredictionRowClick, handleSliderInput, handlePredictClick, loadSimulationWindow, handleSimulateClick, handleResetClick, handleStartDateChange};
+export {handleModelChange, loadStocks, handlePredictionRowClick, handleSliderInput, handlePredictClick, loadSimulationWindow, handleSimulateClick, handleSaveSimulationClick, handleResetClick, handleStartDateChange, loadHistory};

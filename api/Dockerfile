@@ -19,6 +19,7 @@ COPY main.py .
 COPY config.py .
 COPY state.py .
 COPY schemas.py .
+COPY db.py .
 COPY routers/ ./routers/
 COPY models/  ./models/
 

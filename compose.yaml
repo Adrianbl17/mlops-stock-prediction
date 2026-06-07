@@ -3,11 +3,42 @@ name: "mlops-stock-prediction"
 services:
   api:
     build: ./api
-    ports:
-      - "8000:8000"
+    expose:
+      - "8000"
     env_file: .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - web
+      - data
 
   nginx:
     build: ./nginx
     ports:
       - "80:80"
+    depends_on:
+      - api
+    networks:
+      - web
+
+  postgres:
+    image: 'postgres:17.0-alpine'
+    env_file: .env
+    volumes:
+      - postgres:/var/lib/postgresql/data/
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U stock_user -d predictions"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - data
+
+volumes:
+  postgres:
+
+networks:
+  web:
+  data:

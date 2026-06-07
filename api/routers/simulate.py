@@ -41,8 +41,6 @@ def simulate(req: SimulateRequest):
     X_sim = np.array(req.features, dtype=float)
     sim_pred, sim_conf, sim_prob = state.run_prediction(X_sim, model_type)
 
-    # TODO: log simulated prediction to DB with is_simulation=True (after DB is set up)
-
     return {
         "baseline_prediction":  baseline_pred,
         "baseline_confidence":  baseline_conf,
