@@ -30,7 +30,7 @@
 
 <button>Predict</button>
 
-<table border="1">
+<table id="prediction-table" border="1">
   <thead>
     <tr>
       <th>Date</th>
@@ -66,7 +66,7 @@
 </table>
 
 <!-- ── Section 2: Simulation ── -->
-<h2>Simulation - 2023-06-05 - AAPL - single</h2>
+<h2 id="simulation-heading">Simulation - 2023-06-05 - AAPL - single</h2>
 
 <table border="1">
   <thead>
@@ -82,19 +82,19 @@
   <tbody>
     <tr>
       <td>daily_return</td>
-      <td><input type="range" min="-0.1" max="0.1" step="0.001" value="0.012" /> 0.012</td>
-      <td><input type="range" min="-0.1" max="0.1" step="0.001" value="0.005" /> 0.005</td>
-      <td><input type="range" min="-0.1" max="0.1" step="0.001" value="-0.008" /> -0.008</td>
-      <td><input type="range" min="-0.1" max="0.1" step="0.001" value="0.002" /> 0.002</td>
-      <td><input type="range" min="-0.1" max="0.1" step="0.001" value="0.015" /> 0.015</td>
+      <td><input type="range" min="-0.1" max="0.1" step="0.001" value="0.012" data-feature="daily_return" data-day="1" /> <span class="sim-value">0.012</span></td>
+      <td><input type="range" min="-0.1" max="0.1" step="0.001" value="0.005" data-feature="daily_return" data-day="2" /> <span class="sim-value">0.005</span></td>
+      <td><input type="range" min="-0.1" max="0.1" step="0.001" value="-0.008" data-feature="daily_return" data-day="3" /> <span class="sim-value">-0.008</span></td>
+      <td><input type="range" min="-0.1" max="0.1" step="0.001" value="0.002" data-feature="daily_return" data-day="4" /> <span class="sim-value">0.002</span></td>
+      <td><input type="range" min="-0.1" max="0.1" step="0.001" value="0.015" data-feature="daily_return" data-day="5" /> <span class="sim-value">0.015</span></td>
     </tr>
     <tr>
       <td>Volume</td>
-      <td><input type="range" min="0" max="50000000" step="100000" value="15000000" /> 15.0M</td>
-      <td><input type="range" min="0" max="50000000" step="100000" value="12000000" /> 12.0M</td>
-      <td><input type="range" min="0" max="50000000" step="100000" value="9800000" /> 9.8M</td>
-      <td><input type="range" min="0" max="50000000" step="100000" value="11000000" /> 11.0M</td>
-      <td><input type="range" min="0" max="50000000" step="100000" value="13000000" /> 13.0M</td>
+      <td><input type="range" min="0" max="50000000" step="100000" value="15000000" data-feature="Volume" data-day="1" /> <span class="sim-value">15.0M</span></td>
+      <td><input type="range" min="0" max="50000000" step="100000" value="12000000" data-feature="Volume" data-day="2" /> <span class="sim-value">12.0M</span></td>
+      <td><input type="range" min="0" max="50000000" step="100000" value="9800000" data-feature="Volume" data-day="3" /> <span class="sim-value">9.8M</span></td>
+      <td><input type="range" min="0" max="50000000" step="100000" value="11000000" data-feature="Volume" data-day="4" /> <span class="sim-value">11.0M</span></td>
+      <td><input type="range" min="0" max="50000000" step="100000" value="13000000" data-feature="Volume" data-day="5" /> <span class="sim-value">13.0M</span></td>
     </tr>
   </tbody>
 </table>
