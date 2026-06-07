@@ -11,6 +11,10 @@ function init() {
     row.style.cursor = "pointer";
     row.addEventListener("click", Handler.handlePredictionRowClick);
   });
+
+  document.querySelectorAll("input[data-feature]").forEach((slider) => {
+    slider.addEventListener("input", Handler.handleSliderInput);
+  });
 }
 
 init();

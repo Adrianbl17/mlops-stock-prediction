@@ -26,6 +26,14 @@ async function loadSimulationWindow(symbol, date, modelType) {
   document.querySelector("#simulation-heading").textContent = `Simulation - ${date} - ${symbol} - ${modelType}`;
 }
 
+function handleSliderInput(e) {
+  const input   = e.target;
+  const feature = input.dataset.feature;
+  const value   = parseFloat(input.value);
+
+  input.nextElementSibling.textContent = displayValue(feature, value);
+}
+
 function handlePredictionRowClick(e) {
   const row       = e.currentTarget;
   const date      = row.querySelector("td").textContent;
@@ -55,4 +63,4 @@ function handleModelChange(e) {
   loadStocks(modelSelect.value, stockSelect);
 }
 
-export {handleModelChange, loadStocks, handlePredictionRowClick, loadSimulationWindow};
+export {handleModelChange, loadStocks, handlePredictionRowClick, handleSliderInput, loadSimulationWindow};
