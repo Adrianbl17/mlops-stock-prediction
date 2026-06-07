@@ -2,141 +2,191 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Stock Prediction</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
   <script type="module" src="assets/js/index.js"></script>
 </head>
 <body>
+  <main class="app-shell">
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">MLOps dashboard</p>
+        <h1>Stock Prediction</h1>
+        <p class="subtitle">LSTM market movement forecasts with five-day feature simulation and saved history.</p>
+      </div>
+      <div class="market-badge">
+        <span>S&amp;P 500</span>
+        <strong>LSTM</strong>
+      </div>
+    </header>
 
-<h1>Stock Prediction - LSTM S&P 500</h1>
+    <section class="panel">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Forecast</p>
+          <h2>Prediction</h2>
+        </div>
+      </div>
 
-<!-- ── Section 1: Prediction ── -->
-<h2>Prediction</h2>
+      <form class="control-grid">
+        <label>Model
+          <select id="model-select">
+            <option value="single">Single (AAPL)</option>
+            <option value="multi">Multi (pick stock)</option>
+          </select>
+        </label>
 
-<label>Model:
-  <select id="model-select">
-    <option value="single">Single (AAPL)</option>
-    <option value="multi">Multi (pick stock)</option>
-  </select>
-</label>
+        <label>Stock
+          <select id="stock-select">
+            <option>AAPL</option>
+          </select>
+        </label>
 
-<label>Stock:
-  <select id="stock-select">
-    <option>AAPL</option>
-  </select>
-</label>
+        <label>Start
+          <input type="date" id="start-date" value="2023-06-01" />
+        </label>
 
-<label>Start: <input type="date" id="start-date" value="2023-06-01" /></label>
-<label>End: <input type="date" id="end-date" value="2023-06-30" /></label>
+        <label>End
+          <input type="date" id="end-date" value="2023-06-30" />
+        </label>
 
-<button id="predict-button">Predict</button>
+        <button id="predict-button" type="button">Predict</button>
+      </form>
 
-<table id="prediction-table" border="1">
-  <thead>
-    <tr>
-      <th>Date</th>
-      <th>Predicted</th>
-      <th>Confidence</th>
-      <th>Actual</th>
-      <th>Correct</th>
-      <th>History</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>2023-06-01</td>
-      <td>UP</td>
-      <td>73%</td>
-      <td>UP</td>
-      <td>yes</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>2023-06-02</td>
-      <td>UP</td>
-      <td>61%</td>
-      <td>DOWN</td>
-      <td>no</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>2023-06-05</td>
-      <td>DOWN</td>
-      <td>80%</td>
-      <td>DOWN</td>
-      <td>yes</td>
-      <td></td>
-    </tr>
-  </tbody>
-</table>
+      <div class="table-wrap">
+        <table id="prediction-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Predicted</th>
+              <th>Confidence</th>
+              <th>Actual</th>
+              <th>Correct</th>
+              <th>History</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>2023-06-01</td>
+              <td>UP</td>
+              <td>73%</td>
+              <td>UP</td>
+              <td>yes</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>2023-06-02</td>
+              <td>UP</td>
+              <td>61%</td>
+              <td>DOWN</td>
+              <td>no</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>2023-06-05</td>
+              <td>DOWN</td>
+              <td>80%</td>
+              <td>DOWN</td>
+              <td>yes</td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
 
-<!-- ── Section 2: Simulation ── -->
-<h2 id="simulation-heading">Simulation - 2023-06-05 - AAPL - single</h2>
+    <section class="panel">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">What-if analysis</p>
+          <h2 id="simulation-heading">Simulation - 2023-06-05 - AAPL - single</h2>
+        </div>
+        <div class="button-row">
+          <button id="simulate-button" type="button">Run Simulation</button>
+          <button id="reset-simulation-button" type="button">Reset to real values</button>
+        </div>
+      </div>
 
-<table border="1">
-  <thead>
-    <tr>
-      <th></th>
-      <th>Day 1</th>
-      <th>Day 2</th>
-      <th>Day 3</th>
-      <th>Day 4</th>
-      <th>Day 5</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>daily_return</td>
-      <td><input type="range" min="-0.2" max="0.2" step="0.001" value="0.012" data-feature="daily_return" data-day="1" /> <span class="sim-value">0.012</span></td>
-      <td><input type="range" min="-0.2" max="0.2" step="0.001" value="0.005" data-feature="daily_return" data-day="2" /> <span class="sim-value">0.005</span></td>
-      <td><input type="range" min="-0.2" max="0.2" step="0.001" value="-0.008" data-feature="daily_return" data-day="3" /> <span class="sim-value">-0.008</span></td>
-      <td><input type="range" min="-0.2" max="0.2" step="0.001" value="0.002" data-feature="daily_return" data-day="4" /> <span class="sim-value">0.002</span></td>
-      <td><input type="range" min="-0.2" max="0.2" step="0.001" value="0.015" data-feature="daily_return" data-day="5" /> <span class="sim-value">0.015</span></td>
-    </tr>
-    <tr>
-      <td>Volume</td>
-      <td><input type="range" min="0" max="50000000" step="100000" value="15000000" data-feature="Volume" data-day="1" /> <span class="sim-value">15.0M</span></td>
-      <td><input type="range" min="0" max="50000000" step="100000" value="12000000" data-feature="Volume" data-day="2" /> <span class="sim-value">12.0M</span></td>
-      <td><input type="range" min="0" max="50000000" step="100000" value="9800000" data-feature="Volume" data-day="3" /> <span class="sim-value">9.8M</span></td>
-      <td><input type="range" min="0" max="50000000" step="100000" value="11000000" data-feature="Volume" data-day="4" /> <span class="sim-value">11.0M</span></td>
-      <td><input type="range" min="0" max="50000000" step="100000" value="13000000" data-feature="Volume" data-day="5" /> <span class="sim-value">13.0M</span></td>
-    </tr>
-  </tbody>
-</table>
+      <div class="table-wrap">
+        <table class="simulation-table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Day 1</th>
+              <th>Day 2</th>
+              <th>Day 3</th>
+              <th>Day 4</th>
+              <th>Day 5</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>daily_return</td>
+              <td><input type="range" min="-0.2" max="0.2" step="0.001" value="0.012" data-feature="daily_return" data-day="1" /> <span class="sim-value">0.012</span></td>
+              <td><input type="range" min="-0.2" max="0.2" step="0.001" value="0.005" data-feature="daily_return" data-day="2" /> <span class="sim-value">0.005</span></td>
+              <td><input type="range" min="-0.2" max="0.2" step="0.001" value="-0.008" data-feature="daily_return" data-day="3" /> <span class="sim-value">-0.008</span></td>
+              <td><input type="range" min="-0.2" max="0.2" step="0.001" value="0.002" data-feature="daily_return" data-day="4" /> <span class="sim-value">0.002</span></td>
+              <td><input type="range" min="-0.2" max="0.2" step="0.001" value="0.015" data-feature="daily_return" data-day="5" /> <span class="sim-value">0.015</span></td>
+            </tr>
+            <tr>
+              <td>Volume</td>
+              <td><input type="range" min="0" max="50000000" step="100000" value="15000000" data-feature="Volume" data-day="1" /> <span class="sim-value">15.0M</span></td>
+              <td><input type="range" min="0" max="50000000" step="100000" value="12000000" data-feature="Volume" data-day="2" /> <span class="sim-value">12.0M</span></td>
+              <td><input type="range" min="0" max="50000000" step="100000" value="9800000" data-feature="Volume" data-day="3" /> <span class="sim-value">9.8M</span></td>
+              <td><input type="range" min="0" max="50000000" step="100000" value="11000000" data-feature="Volume" data-day="4" /> <span class="sim-value">11.0M</span></td>
+              <td><input type="range" min="0" max="50000000" step="100000" value="13000000" data-feature="Volume" data-day="5" /> <span class="sim-value">13.0M</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-<button id="simulate-button">Run Simulation</button>
-<button id="reset-simulation-button">Reset to real values</button>
+      <div class="metric-grid">
+        <article class="metric">
+          <h3>Baseline</h3>
+          <p>Prediction: <span id="baseline-prediction">-</span></p>
+          <p>Confidence: <strong id="baseline-confidence">-</strong></p>
+        </article>
+        <article class="metric">
+          <h3>Simulated</h3>
+          <p>Prediction: <span id="simulated-prediction">-</span></p>
+          <p>Confidence: <strong id="simulated-confidence">-</strong></p>
+        </article>
+        <article class="metric delta">
+          <h3>Delta</h3>
+          <p><strong id="simulation-delta">-</strong></p>
+          <p>raw probability shift</p>
+        </article>
+      </div>
 
-<h3>Baseline</h3>
-<p>Prediction: <span id="baseline-prediction">-</span></p>
-<p>Confidence: <span id="baseline-confidence">-</span></p>
+      <button id="save-simulation-button" type="button" disabled>Save to History</button>
+    </section>
 
-<h3>Simulated</h3>
-<p>Prediction: <span id="simulated-prediction">-</span></p>
-<p>Confidence: <span id="simulated-confidence">-</span></p>
+    <section class="panel">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Audit trail</p>
+          <h2>Prediction History</h2>
+        </div>
+      </div>
 
-<h3>Delta</h3>
-<p><span id="simulation-delta">-</span> (raw probability shift)</p>
-
-<button id="save-simulation-button" disabled>Save to History</button>
-
-<!-- ── Section 3: History ── -->
-<h2>Prediction History</h2>
-
-<table id="history-table" border="1">
-  <thead>
-    <tr>
-      <th>Symbol</th>
-      <th>Model</th>
-      <th>Date</th>
-      <th>Prediction</th>
-      <th>Confidence</th>
-      <th>Simulated?</th>
-      <th>Timestamp</th>
-    </tr>
-  </thead>
-  <tbody>
-  </tbody>
-</table>
-
+      <div class="table-wrap">
+        <table id="history-table">
+          <thead>
+            <tr>
+              <th>Symbol</th>
+              <th>Model</th>
+              <th>Date</th>
+              <th>Prediction</th>
+              <th>Confidence</th>
+              <th>Simulated?</th>
+              <th>Timestamp</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
 </body>
 </html>
