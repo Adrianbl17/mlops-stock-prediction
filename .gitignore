@@ -1,6 +1,8 @@
+models/
 api/models/
-
 api/data/
+*.pkl
+*.csv
 
 __pycache__/
 *.pyc
@@ -15,7 +17,6 @@ outputs/
 *.log
 
 *.npy
-*.pkl
 
 .pytest_cache/
 mlruns/
