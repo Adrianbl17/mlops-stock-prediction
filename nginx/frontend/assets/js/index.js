@@ -12,6 +12,8 @@ function init() {
     row.addEventListener("click", Handler.handlePredictionRowClick);
   });
 
+  document.querySelector("#predict-button").addEventListener("click", Handler.handlePredictClick);
+
   document.querySelectorAll("input[data-feature]").forEach((slider) => {
     slider.addEventListener("input", Handler.handleSliderInput);
   });

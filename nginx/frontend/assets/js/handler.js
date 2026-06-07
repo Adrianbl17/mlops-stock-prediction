@@ -57,6 +57,51 @@ function handlePredictionRowClick(e) {
   loadSimulationWindow(symbol, date, modelType);
 }
 
+function buildPredictionRow(result) {
+  const row = document.createElement("tr");
+  row.style.cursor = "pointer";
+
+  const correctText = result.correct === null ? "" : (result.correct ? "yes" : "no");
+
+  [
+    result.date,
+    result.prediction,
+    `${Math.round(result.confidence * 100)}%`,
+    result.actual ?? "",
+    correctText,
+  ].forEach((text) => {
+    const cell = document.createElement("td");
+    cell.textContent = text;
+    row.appendChild(cell);
+  });
+
+  row.addEventListener("click", handlePredictionRowClick);
+  return row;
+}
+
+async function handlePredictClick() {
+  const symbol    = document.querySelector("#stock-select").value;
+  const modelType = document.querySelector("#model-select").value;
+  const startDate = document.querySelector("#start-date").value;
+  const endDate   = document.querySelector("#end-date").value;
+
+  const response = await fetch("/api/predict", {
+    method:  "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      symbol,
+      model_type: modelType,
+      start_date: startDate,
+      end_date:   endDate,
+    }),
+  });
+  const results = await response.json();
+
+  const tbody = document.querySelector("#prediction-table tbody");
+  tbody.innerHTML = "";
+  results.forEach((result) => tbody.appendChild(buildPredictionRow(result)));
+}
+
 async function loadStocks(modelType, stockSelect) {
   const response = await fetch(`/api/stocks?model_type=${encodeURIComponent(modelType)}`);
   const data = await response.json();
@@ -77,4 +122,4 @@ function handleModelChange(e) {
   loadStocks(modelSelect.value, stockSelect);
 }
 
-export {handleModelChange, loadStocks, handlePredictionRowClick, handleSliderInput, loadSimulationWindow};
+export {handleModelChange, loadStocks, handlePredictionRowClick, handleSliderInput, handlePredictClick, loadSimulationWindow};
