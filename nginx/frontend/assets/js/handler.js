@@ -8,6 +8,19 @@ function displayValue(feature, value) {
   return format ? format(value) : String(value);
 }
 
+const FEATURE_RANGE = {
+  Volume: (value) => ({ min: 0, max: value * 2 }),
+};
+
+function setSliderRange(input, feature, value) {
+  const range = FEATURE_RANGE[feature];
+  if (!range) return;
+
+  const { min, max } = range(value);
+  input.min = String(min);
+  input.max = String(max);
+}
+
 async function loadSimulationWindow(symbol, date, modelType) {
   const response = await fetch(`/api/data?symbol=${encodeURIComponent(symbol)}&date=${encodeURIComponent(date)}`);
   const data = await response.json();
@@ -18,6 +31,7 @@ async function loadSimulationWindow(symbol, date, modelType) {
       if (!input) return;
 
       const value = day.values[featureIndex];
+      setSliderRange(input, feature, value);
       input.value = value;
       input.nextElementSibling.textContent = displayValue(feature, value);
     });
