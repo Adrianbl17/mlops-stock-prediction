@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Stock Prediction</title>
+  <script type="module" src="assets/js/index.js"></script>
 </head>
 <body>
 
@@ -12,17 +13,15 @@
 <h2>Prediction</h2>
 
 <label>Model:
-  <select>
+  <select id="model-select">
     <option value="single">Single (AAPL)</option>
     <option value="multi">Multi (pick stock)</option>
   </select>
 </label>
 
 <label>Stock:
-  <select>
+  <select id="stock-select">
     <option>AAPL</option>
-    <option>GOOG</option>
-    <option>MSFT</option>
   </select>
 </label>
 
