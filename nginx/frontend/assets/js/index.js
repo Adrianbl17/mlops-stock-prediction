@@ -20,10 +20,13 @@ function init() {
 
   document.querySelector("#simulate-button").addEventListener("click", Handler.handleSimulateClick);
   document.querySelector("#reset-simulation-button").addEventListener("click", Handler.handleResetClick);
+  document.querySelector("#save-simulation-button").addEventListener("click", Handler.handleSaveSimulationClick);
 
   document.querySelectorAll("input[data-feature]").forEach((slider) => {
     slider.addEventListener("input", Handler.handleSliderInput);
   });
+
+  Handler.loadHistory();
 }
 
 init();
