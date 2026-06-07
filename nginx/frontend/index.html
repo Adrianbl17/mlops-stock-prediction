@@ -99,18 +99,19 @@
   </tbody>
 </table>
 
+<button id="simulate-button">Run Simulation</button>
+<button id="reset-simulation-button">Reset to real values</button>
+
 <h3>Baseline</h3>
-<p>Prediction: UP</p>
-<p>Confidence: 65%</p>
+<p>Prediction: <span id="baseline-prediction">-</span></p>
+<p>Confidence: <span id="baseline-confidence">-</span></p>
 
 <h3>Simulated</h3>
-<p>Prediction: DOWN</p>
-<p>Confidence: 42%</p>
+<p>Prediction: <span id="simulated-prediction">-</span></p>
+<p>Confidence: <span id="simulated-confidence">-</span></p>
 
 <h3>Delta</h3>
-<p>-0.23 (raw probability shift)</p>
-
-<button>Reset to real values</button>
+<p><span id="simulation-delta">-</span> (raw probability shift)</p>
 
 <!-- ── Section 3: History ── -->
 <h2>Prediction History</h2>

@@ -21,6 +21,8 @@ function setSliderRange(input, feature, value) {
   input.max = String(max);
 }
 
+let simState = null;
+
 async function loadSimulationWindow(symbol, date, modelType) {
   const response = await fetch(`/api/data?symbol=${encodeURIComponent(symbol)}&date=${encodeURIComponent(date)}`);
   const data = await response.json();
@@ -37,7 +39,52 @@ async function loadSimulationWindow(symbol, date, modelType) {
     });
   });
 
+  simState = { symbol, date, modelType, featureCols: data.feature_cols, window: data.window };
+
   document.querySelector("#simulation-heading").textContent = `Simulation - ${date} - ${symbol} - ${modelType}`;
+}
+
+function collectSimulationFeatures() {
+  return simState.window.map((day, dayIndex) => {
+    const values = [...day.values];
+
+    simState.featureCols.forEach((feature, featureIndex) => {
+      const input = document.querySelector(`input[data-feature="${feature}"][data-day="${dayIndex + 1}"]`);
+      if (!input) return;
+
+      values[featureIndex] = parseFloat(input.value);
+    });
+
+    return values;
+  });
+}
+
+async function handleSimulateClick() {
+  if (!simState) return;
+
+  const response = await fetch("/api/simulate", {
+    method:  "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      symbol:     simState.symbol,
+      model_type: simState.modelType,
+      date:       simState.date,
+      features:   collectSimulationFeatures(),
+    }),
+  });
+  const result = await response.json();
+
+  document.querySelector("#baseline-prediction").textContent  = result.baseline_prediction;
+  document.querySelector("#baseline-confidence").textContent  = `${Math.round(result.baseline_confidence * 100)}%`;
+  document.querySelector("#simulated-prediction").textContent = result.simulated_prediction;
+  document.querySelector("#simulated-confidence").textContent = `${Math.round(result.simulated_confidence * 100)}%`;
+  document.querySelector("#simulation-delta").textContent     = result.delta;
+}
+
+function handleResetClick() {
+  if (!simState) return;
+
+  loadSimulationWindow(simState.symbol, simState.date, simState.modelType);
 }
 
 function handleSliderInput(e) {
@@ -122,4 +169,4 @@ function handleModelChange(e) {
   loadStocks(modelSelect.value, stockSelect);
 }
 
-export {handleModelChange, loadStocks, handlePredictionRowClick, handleSliderInput, handlePredictClick, loadSimulationWindow};
+export {handleModelChange, loadStocks, handlePredictionRowClick, handleSliderInput, handlePredictClick, loadSimulationWindow, handleSimulateClick, handleResetClick};

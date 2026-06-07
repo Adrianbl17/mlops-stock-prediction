@@ -14,6 +14,9 @@ function init() {
 
   document.querySelector("#predict-button").addEventListener("click", Handler.handlePredictClick);
 
+  document.querySelector("#simulate-button").addEventListener("click", Handler.handleSimulateClick);
+  document.querySelector("#reset-simulation-button").addEventListener("click", Handler.handleResetClick);
+
   document.querySelectorAll("input[data-feature]").forEach((slider) => {
     slider.addEventListener("input", Handler.handleSliderInput);
   });
