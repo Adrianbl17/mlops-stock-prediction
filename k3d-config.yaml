@@ -1,0 +1,23 @@
+apiVersion: k3d.io/v1alpha5
+kind: Simple
+
+metadata:
+  name: mlops-stock
+
+servers: 1
+agents: 3
+
+ports:
+  - port: 8080:80
+    nodeFilters:
+      - loadbalancer
+  - port: 30000-30010:30000-30010
+    nodeFilters:
+      - server:0
+
+options:
+  k3s:
+    extraArgs:
+      - arg: --disable=traefik
+        nodeFilters:
+          - server:*
