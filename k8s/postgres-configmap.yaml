@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+  namespace: mlops-stock
+data:
+  POSTGRES_USER: student_user
+  POSTGRES_DB: labo
+  POSTGRES_HOST: postgres
+  POSTGRES_PORT: "5432"
