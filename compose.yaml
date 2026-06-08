@@ -3,7 +3,7 @@ name: "mlops-stock-prediction"
 services:
   api:
     build: ./api
-    image: registry.localhost:5050/mlops-stock-api:local
+    image: joppeiemants64/mlops-stock-api:latest
     expose:
       - "8000"
     env_file: .env
@@ -16,7 +16,7 @@ services:
 
   nginx:
     build: ./nginx
-    image: registry.localhost:5050/mlops-stock-nginx:local
+    image: joppeiemants64/mlops-stock-nginx:latest
     ports:
       - "80:80"
     depends_on:
