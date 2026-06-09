@@ -16,7 +16,7 @@ services:
 
   nginx:
     build: ./nginx
-    image: joppeiemants64/mlops-stock-nginx:latest
+    image: adrianb1719/mlops-stock-nginx:latest
     ports:
       - "80:80"
     depends_on:
