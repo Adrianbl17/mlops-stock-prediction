@@ -16,9 +16,8 @@ spec:
       containers:
         - name: api
           image: joppeiemants64/mlops-stock-api:latest
-          imagePullPolicy: Always
           ports:
-              containerPort: 8000
+            - containerPort: 8000
           envFrom:
             - secretRef:
                 name: stock-secret
