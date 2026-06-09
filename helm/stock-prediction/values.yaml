@@ -1,0 +1,17 @@
+namespace: mlops-stock
+
+nginx:
+  image: adrianb1719/mlops-stock-nginx:latest
+  replicas: 1
+  nodePort: 30000
+
+api:
+  image: joppeiemants64/mlops-stock-api:latest
+  replicas: 1
+
+postgres:
+  image: postgres:17.0-alpine
+  storage: 1Gi
+  hostPath: /tmp/postgres-data
+  user: stock_user
+  db: predictions
