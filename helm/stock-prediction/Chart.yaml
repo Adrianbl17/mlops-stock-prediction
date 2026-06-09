@@ -1,0 +1,6 @@
+apiVersion: v2
+name: stock-prediction
+appVersion: "1.0.0"
+description: Chart for the stock prediction application
+type: application
+version: 0.1.0
