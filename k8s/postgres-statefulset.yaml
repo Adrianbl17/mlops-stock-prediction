@@ -23,7 +23,7 @@ spec:
               containerPort: 5432
           envFrom:
             - secretRef:
-                name: postgres-secret
+                name: stock-secret
           volumeMounts:
             - name: postgres-data
               mountPath: /var/lib/postgresql/data
@@ -35,9 +35,9 @@ spec:
               command:
                 - pg_isready
                 - -U
-                - student_user
+                - stock_user
                 - -d
-                - labo
+                - predictions
             initialDelaySeconds: 10
             periodSeconds: 10
           livenessProbe:
@@ -45,9 +45,9 @@ spec:
               command:
                 - pg_isready
                 - -U
-                - student_user
+                - stock_user
                 - -d
-                - labo
+                - predictions
             initialDelaySeconds: 30
             periodSeconds: 20
       volumes:
