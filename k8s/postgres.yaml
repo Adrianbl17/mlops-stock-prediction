@@ -14,6 +14,13 @@ spec:
       labels:
         app: postgres
     spec:
+      volumes:
+        - name: postgres-data
+          persistentVolumeClaim:
+            claimName: postgres-data
+        - name: postgres-init
+          configMap:
+            name: postgres-init
       containers:
         - name: postgres
           image: postgres:17.0-alpine
@@ -49,13 +56,6 @@ spec:
                 - predictions
             initialDelaySeconds: 30
             periodSeconds: 20
-      volumes:
-        - name: postgres-data
-          persistentVolumeClaim:
-            claimName: postgres-data
-        - name: postgres-init
-          configMap:
-            name: postgres-init
 ---
 apiVersion: v1
 kind: Service
