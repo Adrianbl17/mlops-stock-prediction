@@ -1,0 +1,42 @@
+name: Redeploy Model
+
+on:
+  workflow_dispatch:
+
+jobs:
+  redeploy:
+    runs-on: self-hosted
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Copy data and models to workspace
+        run: |
+          Copy-Item -Recurse "C:\Users\adria\Documents\4de sem\MLOps\mlops-stock-prediction\api\data" "${{ github.workspace }}\api\data"
+          Copy-Item -Recurse "C:\Users\adria\Documents\4de sem\MLOps\mlops-stock-prediction\api\models" "${{ github.workspace }}\api\models"
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build API image with new model
+        run: docker build -t ghcr.io/adrianbl17/mlops-stock-api:${{ github.sha }} -t ghcr.io/adrianbl17/mlops-stock-api:latest ./api
+
+      - name: Push API image
+        run: |
+          docker push ghcr.io/adrianbl17/mlops-stock-api:${{ github.sha }}
+          docker push ghcr.io/adrianbl17/mlops-stock-api:latest
+
+      - name: Helm upgrade
+        run: |
+          helm upgrade --install stock-prediction ./helm/stock-prediction --namespace mlops-stock --set api.image=ghcr.io/adrianbl17/mlops-stock-api:${{ github.sha }} --kubeconfig "$env:USERPROFILE\.kube\config"
+
+      - name: Verify deployment
+        run: kubectl get pods -n mlops-stock --kubeconfig "$env:USERPROFILE\.kube\config"
