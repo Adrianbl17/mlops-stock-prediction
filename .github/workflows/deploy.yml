@@ -24,6 +24,7 @@ jobs:
         run: |
           Copy-Item -Recurse "C:\Users\adria\Documents\4de sem\MLOps\mlops-stock-prediction\api\data" "${{ github.workspace }}\api\data"
           Copy-Item -Recurse "C:\Users\adria\Documents\4de sem\MLOps\mlops-stock-prediction\api\models" "${{ github.workspace }}\api\models"
+          Copy-Item "C:\Users\adria\Documents\4de sem\MLOps\mlops-stock-prediction\.env" "${{ github.workspace }}\.env"
 
       - name: Log in to GHCR
         uses: docker/login-action@v4
