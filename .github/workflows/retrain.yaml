@@ -1,0 +1,29 @@
+name: Retrain Model
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'components/**'
+      - 'ai-pipeline.yaml'
+  workflow_dispatch:
+
+jobs:
+  retrain:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Azure login
+        run: |
+          az login --tenant "${{ secrets.AZURE_TENANT_ID }}" --use-device-code
+
+      - name: Set Azure subscription
+        run: |
+          az account set --subscription "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+
+      - name: Run training pipeline
+        run: |
+          az ml job create --file ai-pipeline.yaml --resource-group ${{ secrets.RESOURCE_GROUP }} --workspace-name ${{ secrets.WORKSPACE }}
