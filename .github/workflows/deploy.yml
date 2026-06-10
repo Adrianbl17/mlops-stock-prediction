@@ -21,34 +21,41 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Log in to GHCR
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build API image
-        run: docker build -t ghcr.io/adrianbl17/mlops-stock-api:${{ github.sha }} -t ghcr.io/adrianbl17/mlops-stock-api:latest ./api
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
 
-      - name: Push API image
-        run: |
-          docker push ghcr.io/adrianbl17/mlops-stock-api:${{ github.sha }}
-          docker push ghcr.io/adrianbl17/mlops-stock-api:latest
+      - name: Build and push API image
+        uses: docker/build-push-action@v7
+        with:
+          context: ./api
+          push: true
+          tags: |
+            ghcr.io/adrianbl17/mlops-stock-api:latest
+            ghcr.io/adrianbl17/mlops-stock-api:${{ github.sha }}
 
-      - name: Build NGINX image
-        run: docker build -t ghcr.io/adrianbl17/mlops-stock-nginx:${{ github.sha }} -t ghcr.io/adrianbl17/mlops-stock-nginx:latest ./nginx
-
-      - name: Push NGINX image
-        run: |
-          docker push ghcr.io/adrianbl17/mlops-stock-nginx:${{ github.sha }}
-          docker push ghcr.io/adrianbl17/mlops-stock-nginx:latest
+      - name: Build and push NGINX image
+        uses: docker/build-push-action@v7
+        with:
+          context: ./nginx
+          push: true
+          tags: |
+            ghcr.io/adrianbl17/mlops-stock-nginx:latest
+            ghcr.io/adrianbl17/mlops-stock-nginx:${{ github.sha }}
 
       - name: Create namespace if needed
         run: kubectl create namespace mlops-stock --dry-run=client -o yaml | kubectl apply -f - --kubeconfig "$env:USERPROFILE\.kube\config"
 
       - name: Create secret if needed
-        run: |
-          kubectl create secret generic stock-secret --from-env-file=.env -n mlops-stock --dry-run=client -o yaml | kubectl apply -f - --kubeconfig "$env:USERPROFILE\.kube\config"
+        run: kubectl create secret generic stock-secret --from-env-file=.env -n mlops-stock --dry-run=client -o yaml | kubectl apply -f - --kubeconfig "$env:USERPROFILE\.kube\config"
 
       - name: Helm upgrade
-        run: |
-          helm upgrade --install stock-prediction ./helm/stock-prediction --namespace mlops-stock --set api.image=ghcr.io/adrianbl17/mlops-stock-api:${{ github.sha }} --set nginx.image=ghcr.io/adrianbl17/mlops-stock-nginx:${{ github.sha }} --kubeconfig "$env:USERPROFILE\.kube\config"
+        run: helm upgrade --install stock-prediction ./helm/stock-prediction --namespace mlops-stock --set api.image=ghcr.io/adrianbl17/mlops-stock-api:${{ github.sha }} --set nginx.image=ghcr.io/adrianbl17/mlops-stock-nginx:${{ github.sha }} --kubeconfig "$env:USERPROFILE\.kube\config"
 
       - name: Verify deployment
         run: kubectl get pods -n mlops-stock --kubeconfig "$env:USERPROFILE\.kube\config"
