@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: joppeiemants64/mlops-stock-api:latest
+          image: ghcr.io/adrianbl17/mlops-stock-api:latest
           ports:
             - containerPort: 8000
           envFrom:

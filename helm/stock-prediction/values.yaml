@@ -1,12 +1,12 @@
 namespace: mlops-stock
 
 nginx:
-  image: adrianb1719/mlops-stock-nginx:latest
+  image: ghcr.io/adrianbl17/mlops-stock-nginx:latest
   replicas: 1
   nodePort: 30000
 
 api:
-  image: joppeiemants64/mlops-stock-api:latest
+  image: ghcr.io/adrianbl17/mlops-stock-api:latest
   replicas: 1
 
 postgres:

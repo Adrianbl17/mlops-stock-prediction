@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: nginx
-          image: adrianb1719/mlops-stock-nginx:latest
+          image: ghcr.io/adrianbl17/mlops-stock-nginx:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 80
