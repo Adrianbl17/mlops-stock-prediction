@@ -122,6 +122,7 @@ async function loadSimulationWindow(symbol, date, modelType) {
   simState      = { symbol, date, modelType, featureCols: data.feature_cols, window: data.window };
   lastSimResult = null;
 
+  document.querySelector("#simulation-panel").classList.remove("hidden");
   document.querySelector("#simulation-heading").textContent = `Simulation - ${date} - ${symbol} - ${modelType}`;
 
   const saveSimButton = document.querySelector("#save-simulation-button");
